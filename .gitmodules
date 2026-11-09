@@ -1,0 +1,3 @@
+[submodule "srcpkgs/zen-browser"]
+	path = srcpkgs/zen-browser
+	url = git@github.com:kawaiiepic/zen-browser.git
