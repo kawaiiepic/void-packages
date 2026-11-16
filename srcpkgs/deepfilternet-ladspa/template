@@ -11,6 +11,10 @@ homepage="https://huggingface.co/spaces/hshr/DeepFilterNet2"
 distfiles="https://github.com/Rikorose/DeepFilterNet/archive/refs/tags/v${version}.tar.gz"
 checksum=0f9a219d06c404bc4200f228e7e224f108cbbca04d7227a6de7d2ce974c2f579
 
+pre_build() {
+	cargo update -p time --precise 0.3.36
+}
+
 do_install() {
 	vlicense LICENSE
 	vlicense LICENSE-MIT
