@@ -1,0 +1,38 @@
+# Template file for 'trophy'
+pkgname=trophy
+version=0.11.5
+revision=1
+# Pin the exact v0.11.5 source commit so a moved tag cannot silently
+# change the package contents. No unverified tarball checksum is used.
+_commit=57268dd4deb4cf83803a64cd8c5c58af658b2846
+build_style=cmake
+configure_args="-DBUILD_TESTING=OFF -DAPP_VERSION=${version}
+ -DQT_QML_GENERATE_QMLLS_INI=OFF -DCMAKE_INSTALL_LIBDIR=lib"
+hostmakedepends="git pkg-config qt6-base qt6-declarative-host-tools"
+makedepends="qt6-base-devel qt6-declarative-devel qt6-multimedia-devel
+ ffmpeg6-devel pipewire-devel Vulkan-Headers vulkan-loader-devel
+ libdrm-devel MesaLib-devel libva-devel"
+depends="qt6-declarative qt6-multimedia qt6-svg qt6-wayland
+ xdg-desktop-portal"
+short_desc="Wayland game recording and instant replay clipping application"
+maintainer="Trophy Maintainers <trophy@users.noreply.github.com>"
+license="GPL-3.0-or-later"
+homepage="https://github.com/kawaiiepic/Trophy"
+# CMake installs libTrophy.so, detection shims, desktop/AppStream metadata,
+# icons and KWin scripts. This is a native build, not an AppImage repack.
+# Git checkout is used instead of an archive because a trustworthy source
+# tarball SHA256 was not available when the template was prepared.
+do_fetch() {
+	rm -rf "${wrksrc}"
+	git clone --quiet --depth 1 --branch "v${version}" \
+		https://github.com/kawaiiepic/Trophy.git "${wrksrc}"
+	local actual
+	actual=$(git -C "${wrksrc}" rev-parse HEAD) || return 1
+	if [ "${actual}" != "${_commit}" ]; then
+		msg_error "Trophy v${version} tag points at ${actual}, expected ${_commit}.\n"
+	fi
+}
+
+post_install() {
+	vlicense LICENSE
+}
