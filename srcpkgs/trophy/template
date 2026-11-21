@@ -2,37 +2,27 @@
 pkgname=trophy
 version=0.11.5
 revision=2
-# Pin the exact v0.11.5 source commit so a moved tag cannot silently
-# change the package contents. No unverified tarball checksum is used.
-_commit=57268dd4deb4cf83803a64cd8c5c58af658b2846
+archs="x86_64*"
 build_style=cmake
-configure_args="-DBUILD_TESTING=OFF -DAPP_VERSION=${version}
- -DQT_QML_GENERATE_QMLLS_INI=OFF -DCMAKE_INSTALL_LIBDIR=lib"
+configure_args="-DAPP_VERSION=v${version} -DBUILD_TESTING=OFF
+ -DENABLE_VAAPI=ON -DQT_QML_GENERATE_QMLLS_INI=OFF"
 hostmakedepends="git pkg-config qt6-base qt6-declarative-host-tools"
 makedepends="qt6-base-devel qt6-declarative-devel qt6-multimedia-devel
- ffmpeg-devel pipewire-devel Vulkan-Headers vulkan-loader-devel
- libdrm-devel MesaLib-devel libva-devel"
-depends="qt6-declarative qt6-multimedia>=6.11.2_2 qt6-svg qt6-wayland
- xdg-desktop-portal"
-short_desc="Wayland game recording and instant replay clipping application"
-maintainer="Trophy Maintainers <trophy@users.noreply.github.com>"
-license="GPL-3.0-or-later"
+ ffmpeg-devel pipewire-devel libdrm-devel MesaLib-devel
+ libva-devel vulkan-loader-devel"
+depends="qt6-wayland qt6-declarative qt6-multimedia
+ qt6-svg xdg-desktop-portal"
+short_desc="Wayland game recorder and replay clip manager"
+maintainer="kawaiiepic <59005594+kawaiiepic@users.noreply.github.com>"
+license="GPL-3.0-only"
 homepage="https://github.com/kawaiiepic/Trophy"
-# CMake installs libTrophy.so, detection shims, desktop/AppStream metadata,
-# icons and KWin scripts. This is a native build, not an AppImage repack.
-# Git checkout is used instead of an archive because a trustworthy source
-# tarball SHA256 was not available when the template was prepared.
-do_fetch() {
-	rm -rf "${wrksrc}"
-	git clone --quiet --depth 1 --branch "v${version}" \
-		https://github.com/kawaiiepic/Trophy.git "${wrksrc}"
-	local actual
-	actual=$(git -C "${wrksrc}" rev-parse HEAD) || return 1
-	if [ "${actual}" != "${_commit}" ]; then
-		msg_error "Trophy v${version} tag points at ${actual}, expected ${_commit}.\n"
-	fi
-}
 
-post_install() {
-	vlicense LICENSE
+# Fetch the exact tested fork revision; no unverified archive checksum.
+# xbps-src supports source fetching in do_fetch without distfiles.
+_trophy_commit=0dddfc672d456116ed29dc0281b5dfd9ca5b2d09
+do_fetch() {
+	git init -q "${wrksrc}"
+	git -C "${wrksrc}" fetch -q --depth 1 \
+		https://github.com/kawaiiepic/Trophy.git "${_trophy_commit}"
+	git -C "${wrksrc}" checkout -q --detach FETCH_HEAD
 }
