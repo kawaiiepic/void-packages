@@ -1,0 +1,19 @@
+From: Nyxi Void packages <trophy@users.noreply.github.com>
+Subject: [PATCH] shared/ad: return NULL for an absent advertising object
+
+bt_ad_has_data returns struct bt_ad_data *, not bool. Returning false is
+a type error on toolchains that distinguish _Bool from pointer types.
+
+See also: https://github.com/bluez/bluez
+--- a/src/shared/ad.c
++++ b/src/shared/ad.c
+@@ -1247,8 +1247,8 @@
+ struct bt_ad_data *bt_ad_has_data(struct bt_ad *ad,
+ 					const struct bt_ad_data *data)
+ {
+ 	if (!ad)
+-		return false;
++		return NULL;
+ 
+ 	return queue_find(ad->data, data_match, data);
+ }
