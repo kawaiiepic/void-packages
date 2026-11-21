@@ -1,7 +1,7 @@
 # Template file for 'trophy'
 pkgname=trophy
 version=0.11.5
-revision=1
+revision=2
 # Pin the exact v0.11.5 source commit so a moved tag cannot silently
 # change the package contents. No unverified tarball checksum is used.
 _commit=57268dd4deb4cf83803a64cd8c5c58af658b2846
@@ -10,9 +10,9 @@ configure_args="-DBUILD_TESTING=OFF -DAPP_VERSION=${version}
  -DQT_QML_GENERATE_QMLLS_INI=OFF -DCMAKE_INSTALL_LIBDIR=lib"
 hostmakedepends="git pkg-config qt6-base qt6-declarative-host-tools"
 makedepends="qt6-base-devel qt6-declarative-devel qt6-multimedia-devel
- ffmpeg6-devel pipewire-devel Vulkan-Headers vulkan-loader-devel
+ ffmpeg-devel>=9.0_1 pipewire-devel Vulkan-Headers vulkan-loader-devel
  libdrm-devel MesaLib-devel libva-devel"
-depends="qt6-declarative qt6-multimedia qt6-svg qt6-wayland
+depends="qt6-declarative qt6-multimedia>=6.11.2_2 qt6-svg qt6-wayland
  xdg-desktop-portal"
 short_desc="Wayland game recording and instant replay clipping application"
 maintainer="Trophy Maintainers <trophy@users.noreply.github.com>"
