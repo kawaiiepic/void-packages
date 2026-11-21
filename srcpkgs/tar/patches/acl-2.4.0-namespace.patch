@@ -86,7 +86,7 @@ index 4f5872c1..f98e8e0f 100644
  	      file_name));
  
    acl_free (acl);
-@@ -357,10 +357,10 @@ acls_get_text (int parentfd, const char *file_name, acl_type_t type,
+@@ -357,9 +357,9 @@ acls_get_text (int parentfd, const char *file_name, acl_type_t type,
    char *val = NULL;
    acl_t acl;
  
