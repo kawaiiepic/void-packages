@@ -1,0 +1,176 @@
+
+# Template file for 'linux-wallpaperengine'
+# Almamu/linux-wallpaperengine
+# Local use only: bundles prebuilt CEF binaries.
+
+pkgname=linux-wallpaperengine
+version=0.0.0.20261107
+revision=1
+
+_commit=f5c70bf2d4eeb749d7a1aa4f72070870830dc1b8
+
+_glslang=b775500a153f5ceb0e4b6f366b79c4c57521bb62
+_spirv=ad4d02220b01c1800e5a4e6671d6d8ca8ab07783
+_stb=f0569113c93ad095470c54bf34a17b36646bbbb5
+_json=4424a0fcc1c7fa640b5c87d26776d99150dacd10
+_mime=8990d6a796bd9904ec3d41e5c150a1ffb48fe32e
+_kiss=febd4caeed32e33ad8b2e0bb5ea77542c40f18ec
+_argp=d924b84eba1f0f0adf38b20b7b4829f6f65b6570
+_qjs=72ba50f63ee31202f8c18b8d07ab1e1c3486ee6f
+
+_cef="135.0.17+gcbc1c5b+chromium-135.0.7049.52"
+
+build_style=cmake
+wrksrc="${pkgname}-${version}"
+build_wrksrc="${pkgname}-${_commit}"
+
+configure_args="
+ -DCMAKE_INSTALL_PREFIX=/opt/linux-wallpaperengine
+ -DCMAKE_BUILD_TYPE=Release
+ -DBUILD_TESTING=OFF
+ -DENABLE_WAYLAND=ON
+ -DENABLE_X11=OFF
+ -DCMAKE_POSITION_INDEPENDENT_CODE=ON
+ -DCEF_NO_SANDBOX=ON
+"
+
+hostmakedepends="
+ cmake
+ pkg-config
+ wayland-devel
+"
+
+makedepends="
+ wayland-devel
+ wayland-protocols
+ MesaLib-devel
+ libX11-devel
+ libXrandr-devel
+ libXxf86vm-devel
+ dbus-devel
+ glew-devel
+ libfreeglut-devel
+ zlib-devel
+ SDL2-devel
+ mpv-devel
+ liblz4-devel
+ ffmpeg6-devel
+ pulseaudio-devel
+ freetype-devel
+ glm
+ glfw-devel
+ gmp-devel
+ gmpxx-devel
+ nss-devel
+ nspr-devel
+ cups-devel
+ at-spi2-core-devel
+ atk-devel
+ libXcomposite-devel
+ libXdamage-devel
+ libXfixes-devel
+ libXext-devel
+ libxkbcommon-devel
+ libdrm-devel
+ alsa-lib-devel
+ expat-devel
+ pango-devel
+"
+
+short_desc="Wallpaper Engine backgrounds for Linux (OpenGL)"
+maintainer="Local User <local@localhost>"
+license="GPL-3.0-only"
+homepage="https://github.com/AlexC1991/linux-wallpaperengine"
+
+distfiles="
+ ${homepage}/archive/${_commit}.tar.gz
+ https://github.com/Almamu/glslang-WallpaperEngine/archive/${_glslang}.tar.gz>glslang-we-${_glslang}.tar.gz
+ https://github.com/Almamu/SPIRV-Cross-WallpaperEngine/archive/${_spirv}.tar.gz>spirv-cross-we-${_spirv}.tar.gz
+ https://github.com/nothings/stb/archive/${_stb}.tar.gz>stb-${_stb}.tar.gz
+ https://github.com/nlohmann/json/archive/${_json}.tar.gz>json-${_json}.tar.gz
+ https://github.com/lasselukkari/MimeTypes/archive/${_mime}.tar.gz>mimetypes-${_mime}.tar.gz
+ https://github.com/mborgerding/kissfft/archive/${_kiss}.tar.gz>kissfft-${_kiss}.tar.gz
+ https://github.com/p-ranav/argparse/archive/${_argp}.tar.gz>argparse-${_argp}.tar.gz
+ https://github.com/quickjs-ng/quickjs/archive/${_qjs}.tar.gz>quickjs-${_qjs}.tar.gz
+ https://cef-builds.spotifycdn.com/cef_binary_135.0.17%2Bgcbc1c5b%2Bchromium-135.0.7049.52_linux64_minimal.tar.bz2>cef-minimal-135.tar.bz2
+"
+
+# Regenerate using:
+# ./xbps-src xgensum linux-wallpaperengine
+checksum="d8e98e34d1dae7aec4c624bdfcbe48dce9e503ba44ac3398db39f53e8bb3b13b
+ 4a837d909e9a2c676c9fab98e4368ec1ce7c2a5897ba823b44ed3b8f6c9d33db
+ 91508eca9b1199ddef1c8d3e45924b46e65c056bc4a1f503ea8dc56f38e34cbf
+ 4d05c96640ae3a8cbdafdad8d344b50ce610802f78aee80154acdb8e266282e0
+ 93adda79eb21e730fb34fc02511db263cf397d4587157e95ff83f42ad60569bf
+ e0e03a7538ba14987941c1eb18bab637ee9d68b8cb5b5733daa695e0ff27db9a
+ fe840c3e29fc98250ae3ba843696894f190037f947332296e4be281a18f341cd
+ 3a77a43590dcae7609d4f7e84d8830b51880b4c69e423fab3eff02ecbc682a48
+ ed857d8546b5be9fee93a9f108017699636885a22f9b6824374d4ea81296355f
+ 24ac1980e62be7b1aea2c337d6bd4bc770dccd8b37e47c6db94b397f13ec4dc6"
+
+nocross=yes
+nostrip=yes
+noshlibprovides=yes
+only_for_archs="x86_64"
+
+CFLAGS+=" -Wno-builtin-macro-redefined"
+CXXFLAGS+=" -Wno-builtin-macro-redefined"
+
+pre_configure() {
+    [ -f CMakeLists.txt ] ||
+        msg_error "CMakeLists.txt not found in $PWD\n"
+
+    # Populate submodules from XBPS-managed distfiles.
+    # No git submodule downloads during the build.
+    _sub() {
+    local src="${wrksrc}/$1"
+    local dst="src/External/$2"
+
+    [ -d "$src" ] ||
+        msg_error "Missing submodule source: $src\n"
+
+    mkdir -p "$dst"
+    cp -a "$src"/. "$dst"/
+}
+
+    _sub "glslang-WallpaperEngine-${_glslang}" \
+        glslang-WallpaperEngine
+
+    _sub "SPIRV-Cross-WallpaperEngine-${_spirv}" \
+        SPIRV-Cross-WallpaperEngine
+
+    _sub "stb-${_stb}" stb
+    _sub "json-${_json}" json
+    _sub "MimeTypes-${_mime}" MimeTypes
+    _sub "kissfft-${_kiss}" kissfft
+    _sub "argparse-${_argp}" argparse
+    _sub "quickjs-${_qjs}" quickjs
+
+    # Stage CEF before CMake configuration.
+    local cef_src="${wrksrc}/cef_binary_${_cef}_linux64_minimal"
+
+    [ -d "$cef_src" ] ||
+        msg_error "CEF source directory not found: $cef_src\n"
+
+    mkdir -p build/cef
+    cp -a "$cef_src" build/cef/
+
+    # Prevent tests from requiring Catch2.
+    # Avoid executing tests in the source build.
+}
+
+post_install() {
+    vlicense LICENSE
+
+    # Standalone launcher
+    vmkdir usr/bin
+
+    cat > "${DESTDIR}/usr/bin/linux-wallpaperengine" <<'EOF'
+#!/bin/sh
+cd /opt/linux-wallpaperengine || exit 1
+exec ./linux-wallpaperengine "$@"
+EOF
+
+    chmod 755 "${DESTDIR}/usr/bin/linux-wallpaperengine"
+}
+
