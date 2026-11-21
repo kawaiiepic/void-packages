@@ -9,7 +9,7 @@ build_style=cmake
 configure_args="-DBUILD_TESTING=OFF -DAPP_VERSION=${version}
  -DQT_QML_GENERATE_QMLLS_INI=OFF -DCMAKE_INSTALL_LIBDIR=lib"
 hostmakedepends="git pkg-config qt6-base qt6-declarative-host-tools"
-makedepends="qt6-base-devel qt6-declarative-devel qt6-multimedia-devel
+makedepends="qt6-base-devel qt6-declarative-devel qt6-multimedia-devel>=6.11.2_2
  ffmpeg-devel>=9.0_1 pipewire-devel Vulkan-Headers vulkan-loader-devel
  libdrm-devel MesaLib-devel libva-devel"
 depends="qt6-declarative qt6-multimedia>=6.11.2_2 qt6-svg qt6-wayland
