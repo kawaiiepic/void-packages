@@ -1,7 +1,7 @@
 # Template file for 'trophy'
 pkgname=trophy
-version=0.11.5
-revision=3
+version=0.12.1
+revision=1
 archs="x86_64*"
 build_style=cmake
 configure_args="-DAPP_VERSION=v${version} -DBUILD_TESTING=OFF
@@ -9,7 +9,7 @@ configure_args="-DAPP_VERSION=v${version} -DBUILD_TESTING=OFF
 hostmakedepends="git pkg-config qt6-base qt6-declarative-host-tools"
 makedepends="qt6-base-devel qt6-declarative-devel qt6-multimedia-devel
  ffmpeg-devel pipewire-devel libdrm-devel MesaLib-devel
- libva-devel vulkan-loader-devel"
+ libva-devel vulkan-loader-devel libyaml-devel sqlite-devel"
 depends="qt6-wayland qt6-declarative qt6-multimedia
  qt6-svg xdg-desktop-portal"
 short_desc="Wayland game recorder and replay clip manager"
@@ -17,9 +17,8 @@ maintainer="kawaiiepic <59005594+kawaiiepic@users.noreply.github.com>"
 license="GPL-3.0-only"
 homepage="https://github.com/kawaiiepic/Trophy"
 
-# Fetch the exact tested fork revision; no unverified archive checksum.
-# xbps-src supports source fetching in do_fetch without distfiles.
-_trophy_commit=7a1f02fb813dd625bcac0570e6757b4ec30ddab9
+# Pin the upstream v0.12.1 commit used by the fork's clean baseline.
+_trophy_commit=1d603e8b0feb1e013b4eea40f36dbedb6d56d0df
 do_fetch() {
 	git init -q "${wrksrc}"
 	git -C "${wrksrc}" fetch -q --depth 1 \
