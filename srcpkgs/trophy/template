@@ -1,7 +1,7 @@
 # Template file for 'trophy'
 pkgname=trophy
 version=0.11.5
-revision=2
+revision=3
 archs="x86_64*"
 build_style=cmake
 configure_args="-DAPP_VERSION=v${version} -DBUILD_TESTING=OFF
@@ -19,7 +19,7 @@ homepage="https://github.com/kawaiiepic/Trophy"
 
 # Fetch the exact tested fork revision; no unverified archive checksum.
 # xbps-src supports source fetching in do_fetch without distfiles.
-_trophy_commit=0dddfc672d456116ed29dc0281b5dfd9ca5b2d09
+_trophy_commit=7a1f02fb813dd625bcac0570e6757b4ec30ddab9
 do_fetch() {
 	git init -q "${wrksrc}"
 	git -C "${wrksrc}" fetch -q --depth 1 \
